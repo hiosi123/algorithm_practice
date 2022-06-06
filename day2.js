@@ -32,7 +32,7 @@ function sum100(arr){
   
 sum100(arr)
 
-// 뒤에서 부터 지워준다면 안전하다...
+// 뒤에서 부터 지워준다면 안전하다..
 
 
 function sum100(arr){
