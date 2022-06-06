@@ -51,3 +51,23 @@ function sum100(arr){
 }
 
 sum100(arr)
+
+
+//9.
+//대문자로 이루어진 영어단어가 입력되면 단어에 포함된 ‘A'를 모두 ’#‘으로 바꾸어 출력하는 프로그램을 작성하세요.
+
+string = "BANANA"
+
+string.split('').map((e,i) => e === 'A'? '#':e).join('')
+
+//정규표현식을 쓴다면..
+string.replace(/A/g, '#') 
+// 아주 간단하다
+
+//10.
+string = 'COMPUTERPROGRAMMING'
+find = 'R'
+let count = 0
+string.split('').forEach(e=> e === 'R'? count++: count+=0)
+
+count
