@@ -31,3 +31,23 @@ function sum100(arr){
 }
   
 sum100(arr)
+
+// 뒤에서 부터 지워준다면 안전하다...
+
+
+function sum100(arr){
+  let sum = arr.reduce((a,b) => a+b)
+  console.log(sum)
+	for(let i=0; i< arr.length; i++){
+    for(let j=i+1; j< arr.length; j++){
+      if((sum - (arr[i]+arr[j])) === 100){
+        arr.splice(j,1)
+        arr.splice(i,1)
+      	return arr
+      }
+    }
+  }
+  
+}
+
+sum100(arr)
