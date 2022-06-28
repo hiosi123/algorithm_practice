@@ -46,3 +46,143 @@ SELECT
 FROM Customers
 Order by 7
 ;
+
+
+Group by
+- 집계 연산자 (sum, count, ...)를 실행할 때 기준을 알려주는 라인이다.
+- 가령, 국가별로 회원 가입자 수를 추출 할때
+
+ex1)
+앞에 있는 기준에 대해서 카운트 해줘
+SELECT Country, COUNT(*) as COUNT
+	FROM Customers
+	GROUP BY Country
+    ;
+    
+ex2)
+SELECT Country, COUNT(distinct customerid) as COUNT
+	FROM Customers
+	GROUP BY Country
+    ORDER BY COUNT DESC
+    ;
+
+Having
+- Group by 짝궁, where 절만으로도 충분하지 않을때, 그 개수에 대한 필터링을 걸고 싶을 때, where 절 만으로는 충분하지 않다.
+
+- Group by 가 나오지 않으면 사용 할 수 없음
+
+- 집계 함수, 결과에 대한 필터링을 할 수 있다.
+
+- 국가별 회원 가입 수를 추출 했을때 회원 가입 수가 5명 이상인 국가를 보고싶다.
+
+- 즉 집계 함수에 대한 필터링을 할때 필요하다.
+
+- 서브 쿼리를 통해서 having 의 기능을 대처할 수 있다.
+
+ex3)
+
+나라별로 가입 한 회원 수를 보고, 5명 이상인 부분만 빼오자.
+
+SELECT Country, COUNT(distinct customerID) AS COUNT
+  FROM Customers
+  GROUP BY Country
+  HAVING COUNT >= 5
+  ORDER BY COUNT DESC
+  ;
+
+집계함수
+(aggregate function)
+- 데이터를 집계하는데 사용하는 함수 
+- 주로 select 절 뒤에 사용됨
+SUM()
+AVG()
+MIN(), MAX()
+COUNT()
+SubStr(col, start_num, end_num) : 문자열, 날짜 조건을 잘라줌.
+
+len(): 길이 반환
+
+Case When then end
+조건별 분기
+```
+case When Condition1 then Value1
+	 When Condition2 then Value2
+     else Value3 end
+```
+- 집계 함수는 아니지만 =IF 시에 자주 사용됨
+- 이외에도 많은 함수들이 있음.
+
+
+ex4) id 가 30 이하인, 가격의 평균
+
+SELECT AVG(PRICE) as avg_price_under_30
+	FROM Products
+    WHERE "ProductID" <= 30
+    ;
+
+ex5) 월별 생일자 구하기,
+
+SELECT SUBSTR(BirthDate,1,7) as Month, COUNT(*) as cnt
+	FROM Employees
+    GROUP BY SUBSTR(BirthDate,1,7)
+    ;
+
+ex6) 공급자의 평균 가격 구하기
+
+SELECT SupplierID, avg(price) as avgPrice
+	FROM Products
+    Group by SupplierId
+    Order By avgPrice DESC
+    ;
+
+더 많은 sql function 
+
+문자열 자르기 2  - right(col)
+문자열 자르기 3  - left(col)
+문자열 자르기 4  - mid(col)
+문자열 변환 - upper(col)
+문자열 변환 - lower(col)
+null 값 처리 - ifnull(col)
+순위메기기 - rank() over(partioned by col order by col) 
+
+위에 소개한 function 들은 select 과 where 절에서 다 쓸수 있지만 가급적이면 select에서 써주자 성능저하 문제
+
+ex7) 20번 이상의 아이디 중에 가장 비싼 가격
+
+SELECT Max(price) as maxprice
+  FROM Products
+  WHERE Productid >= 20
+	;
+    
+ex8) 가장 가격이 낮은 제품들을 출력    
+
+SELECT *
+  FROM Products
+  WHERE price = (select max(price) from products)
+	;
+    
+    
+ex9) 날짜중 달을 기준으로 orderid 를 카운트 해줘
+
+SELECT SUBSTR(orderdate,1,7) as Month, count(distinct orderid)
+  FROM orders
+  GROUP BY Month
+  order by orderdate DESC
+	;
+    
+    
+ex10) 나라별로 중복되지 않은 도시 개수를 찾아줘
+
+select country, Count(distinct city) as city
+	FROM Customers
+    Group by Country
+    ;
+    
+    
+ex11) case 문 확인하기
+
+SELECT categoryid, case when productid <= 3 then '소비재'
+			when productid between 4 and 5 then '사치재'
+            else 'etc' end as '분류'
+            FROM Products
+            ;
